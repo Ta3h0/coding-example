@@ -1,124 +1,70 @@
-const inputTitle = document.getElementById('title'); // title 인풋 태그 > 영화제목
-const inputGenre = document.getElementById('genre'); // genre 인풋 태그 > 장르
-const inputTime = document.getElementById('time'); // time 인풋 태그 > 상영시간
-const selectView = document.getElementById('isStudentView'); //  isStudentView 셀렉트 태그 > 청소년 관람 가능 여부
-const addBtn = document.getElementById('addBtn') // addBtn 버튼 태그 > 추가하기
-const moviePanel = document.getElementById('movie-panel') // movie-panel div 태그 > 영화 리스트 보여질 곳
+const titleInput = document.getElementById('title'); // 책 제목 값 입력 input 태그
+const genreInput = document.getElementById('genre'); // 장르 값 입력 input 태그
+const writerInput = document.getElementById('writer'); // 저자 값 입력 input 태그
+const RecommendTag = document.getElementById('isRecommend'); // 추천 여부 값 입력 select 태그
+const addBtn = document.getElementById('addBtn'); // 추가 버튼
+const bookPanel = document.getElementById('book-panel'); // 책 리스트 패널
+let recommendValue; // 추천 여부 string > boolean 값으로 변환 용 변수
 
-// 영화 리스트 배열
-const movieList = [
-    {
-        title: "7번방의 선물",
-        genre: "다큐멘터리",
-        time: "26.03.18 12:00",
-        isStudentView: "가능",
-    },
-    {
-        title: "존 윅 4",
-        genre: "액션",
-        time: "26.01.08 17:00",
-        isStudentView: "불가능",
-    },
-    {
-        title: "만약에 우리",
-        genre: "멜로",
-        time: "26.03.11 21:00",
-        isStudentView: "가능",
-    },
-];
+/* if (isRecommend.value === "") { // 추천 여부 비었을 경우
+    alert("추천 여부를 입력해주세요.") // 경고창 띄우기
+    return;
+} */
 
+// 책 리스트 배열
+const bookList = [];
 
-// 영화 배열에 추가하기
-function addMovie(newMovie) {
-    movieList.push(newMovie); // 영롸 리스트 배열 마지막에 새로운 영화 객체 추가
-
-    // 입력값 초기화
-    inputTitle.value = '';
-    inputGenre.value = '';
-    inputTime.value = '';
-    selectView.value = '';
-
-    renderList();
-};
-
-// 사용자가 입력한 값 받아와서 저장하기
-function listServe() {
-    const titleInfo = inputTitle.value.trim(); // titleInfo에 사용자가 입력한 제목 내용을 앞, 뒤 띄어쓰기 제외하고 저장
-    const genreInfo = inputGenre.value.trim(); // genreInfo에 사용자가 입력한 제목 내용을 앞, 뒤 띄어쓰기 제외하고 저장
-    const timeInfo = inputTime.value.trim(); // timeInfo에 사용자가 입력한 제목 내용을 앞, 뒤 띄어쓰기 제외하고 저장
-    const viewInfo = selectView.value; // viewInfo에 사용자가 입력한 제목 내용을 앞, 뒤 띄어쓰기 제외하고 저장
-
-    if (titleInfo === '') { // 입력 안했으면
-        alert('제목을 입력해주세요.');
-        return;
-    } else if (genreInfo === '') { // 입력 안했으면
-        alert('장르를 입력해주세요.');
-        return;
-    } else if (timeInfo === '') { // 입력 안했으면
-        alert('상영시간을 입력해주세요.');
-        return;
-    } else if (viewInfo === '') { // 선택 안했으면
-        alert('청소년 관람 가능 여부를 선택해주세요.'); // 경고창 띄우기
-        return;
-    }
-
-    const movieItem = { // 영화 객체
-        title: titleInfo, // 제목
-        genre: genreInfo, // 장르
-        time: timeInfo, // 상영시간
-        isStudentView: viewInfo, // 청소년 관람 가능 여부
-    }
-
-    addMovie(movieItem); // 저장한 새로운 영화 정보 보내기
-};
-
-// 리스트 랜더링 함수
+// 화면 다시 그리기
 function renderList() {
-    moviePanel.innerHTML = ''; // 영화 리스트 패널 초기화
+    let bookHtml = ''; // 책 리스트 패널에 들어갈 카드 html 입력용 변수 선언
 
-    movieList.forEach(movie => {
-        const itemBox = document.createElement('div'); // div 만들기
-        itemBox.classList.add('item'); // > div.item > 아이템 자체
-        const itemTitle = document.createElement('h3'); // h3 만들기
-        itemTitle.classList.add('title'); // > h3.title > 장르
-        const itemChip = document.createElement('span'); // span 만들기
-        itemChip.classList.add('genre'); // > span.genre > 장르
-        const itemInfo = document.createElement('ul'); // ul 만들기
-        itemInfo.classList.add('info-box'); // > div.info-box > 상영시간, 청소년 관람 가능 여부 보여줄 박스
-        const itemTime = document.createElement('li'); // li 만들기 > 상영시간 li
-        const itemView = document.createElement('li'); // li 만들기 > 청소년 관람 가능 여부 li
-        const timeTitle = document.createElement('p'); // p 만들기 > 상영시간 li 안에서 p가 타이틀 역할을 할 예정
-        const viewTitle = document.createElement('p'); // p 만들기 > 청소년 관람 가능 여부 li 안에서 p가 타이틀 역할을 할 예정
-        const timeContent = document.createElement('strong'); // strong 만들기 > 상영시간 li 안에서 strong이 값을 보여줄 예정
-        const viewContent = document.createElement('strong'); // strong 만들기 > 청소년 관람 가능 여부 li 안에서 strong이 값을 보여줄 예정
+    for (let i = 0; bookList.length > i; i++) { // bookList 만큼 반복
+        bookHtml += `<div class="item ${bookList[i].isRecommend}">
+            <span class="genre">${bookList[i].genre}</span>
+            <h1 class="title">${bookList[i].title}</h1>
+            <ul class="info-box">
+                <li>
+                <p>저자</p>
+                <strong>${bookList[i].writer}</strong>
+                </li>
+            </ul>
+        </div>
+        `
+    }
 
-        itemTitle.textContent = movie.title;// itemTitle 내용 저장
-        itemChip.textContent = movie.genre;// itemChip 내용 저장
+    bookPanel.innerHTML = bookHtml; // 만든 bookHtml들을 책 리스트 패널에 삽입
+}
 
-        // info-box 속 각 li안에 타이틀이 될 p 내용 저장
-        viewTitle.textContent = '청소년 관람 가능 여부 |';
-        timeTitle.textContent = '상영시간 |';
+function addList() {
+    const newBook = {
+        title: titleInput.value, // 제목
+        genre: genreInput.value, // 장르
+        writer: writerInput.value, // 저자
+        isRecommend: RecommendTag.value, // 추천 여부
+    }
 
-        console.log(movie.isStudentView)
-        // info-box 속 각 li안에 값을 보여줄 strong 내용 저장
-        timeContent.textContent = movie.time;
-        viewContent.textContent = movie.isStudentView;
+    if (newBook.title === "") {
+        alert('책 제목을 입력해주세요')
+        return;
+    } else if (newBook.writer === "") {
+        alert('저자를 입력해주세요')
+        return;
+    } else if (newBook.genre === "") {
+        alert('장르를 입력해주세요')
+        return;
 
-        itemTime.appendChild(timeTitle); // 상영시간 li에 상영시간 타이틀 삽입
-        itemTime.appendChild(timeContent); // 상영시간 li에 상영시간 값 삽입
-        itemView.appendChild(viewTitle); // 청소년 관람 가능 여부 li에 청소년 관람 가능 여부 타이틀 삽입
-        itemView.appendChild(viewContent); // 청소년 관람 가능 여부 li에 청소년 관람 가능 여부 값 삽입
+    } else if (newBook.isRecommend === "") {
+        alert('추천 여부를 선택해주세요')
+        return;
+    }
 
-        itemInfo.appendChild(itemTime) // info-box에 상영시간 li 삽입
-        itemInfo.appendChild(itemView) // info-box에 청소년 관람 가능 여부 li 삽입
+    bookList.push(newBook);
 
-        itemBox.appendChild(itemChip) // 영화 아이템 패널에 장르 chip 삽입
-        itemBox.appendChild(itemTitle) // 영화 아이템 패널에 제목 타이틀 삽입
-        itemBox.appendChild(itemInfo) // 영화 아이템 패널에 info-box삽입
+    titleInput.value = '';
+    genreInput.value = '';
+    writerInput.value = '';
+    RecommendTag.value = '';
+    renderList();
+}
 
-        moviePanel.appendChild(itemBox); // 영화 리스트 패널에 itemBox 삽입
-    });
-};
-
-addBtn.addEventListener('click', listServe);
-renderList();
+addBtn.addEventListener('click', addList);

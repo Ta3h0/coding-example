@@ -68,11 +68,13 @@ input, select {
     border-radius: 16px;
     box-shadow: 10px 10px 30px rgba(0,0,0,.08);
     color: #333;
+    transition: .3s;
 }
 
-.item .title {
+#wrap .item .title {
     font-size: 20px;
     font-weight: bold;
+    text-align: start;
     margin-top: 4px;
     margin-bottom: 12px;
 }
@@ -104,4 +106,22 @@ input, select {
     margin-right: 8px;
     font-weight: 400;
     color: #767676;
+}
+
+.item.recommend {
+    background-color: dodgerblue;
+    color: white;
+}
+
+.item.no-recommend {
+    opacity: 0.5;
+}
+
+.item.recommend .genre {
+    background-color: white;
+    color: dodgerblue;
+}
+
+.item.recommend .info-box li p {
+    color: white;
 }
