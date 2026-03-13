@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Day 10 책 추천 카드 앱</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div id="wrap">
+    <h1>나만의 책 추천 카드 앱</h1>
+    <p class="sub-text">책 정보를 추가하고, 저장하고, 다시 불러오는 연습</p>
+
+    <div class="input-box">
+      <input type="text" id="title" placeholder="책 제목을 입력해주세요." />
+      <input type="text" id="writer" placeholder="저자를 입력해주세요." />
+      <input type="text" id="genre" placeholder="장르를 입력해주세요." />
+
+      <select id="isRecommend">
+        <option value="">추천 여부를 선택해주세요.</option>
+        <option value="추천">추천</option>
+        <option value="비추천">비추천</option>
+      </select>
+
+      <button id="addBtn">추가하기</button>
+    </div>
+
+    <div class="summary-box">
+      <p>전체 책 개수: <span id="bookCount">0</span>권</p>
+    </div>
+
+    <div id="bookList" class="row">
+      <!-- JS로 카드가 들어올 자리 -->
+    </div>
+  </div>
+
+  <script src="js/common.js"></script>
+</body>
+</html>
